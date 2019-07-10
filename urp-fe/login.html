@@ -1,0 +1,152 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>登录</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div class="background">
+		<canvas id="Mycanvas"></canvas>
+		<script type="text/javascript" src="js/background.js"></script>
+	</div>
+	<div id="control">
+		<div class="loginform">
+			<div class="head">
+				<img src="images/frame/schlogo.png">
+				<h1>教务辅助系统</h1>
+			</div>
+			<van-cell-group>
+				<van-field v-model="loginform.username" center clearable label="账号" placeholder="请输入学工号" size="large" />
+			</van-cell-group>
+			<van-cell-group>
+				<van-field v-model="loginform.password" center clearable label="密码" type="password" placeholder="请输入密码"
+					size="large" />
+			</van-cell-group>
+			<van-cell-group>
+				<van-row>
+					<van-col span="16">
+						<van-field v-model="loginform.idecode" center clearable label="验证码" placeholder="请输入验证码"
+							size="large">
+					</van-col>
+					<van-col span="8">
+						<img src="images/frame/code.jpg" height="48px" class="idecode">
+					</van-col>
+				</van-row>
+			</van-cell-group>
+			<br>
+			<van-row>
+				<van-col span="12">
+					<van-checkbox v-model="loginform.loginauto">自动登录</van-checkbox>
+				</van-col>
+				<van-col span="12" class="forgetpwd">忘记密码？</van-col>
+			</van-row>
+			<br>
+			<van-button round type="info" size="large" class="loginbutton" @click="login"
+				:disabled="loginbutton.disabled" :loading="loginbutton.loading" loading-type="spinner">登录
+			</van-button>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			loginform: {
+				username: '',
+				password: '',
+				idecode: '',
+				loginauto: 1,
+			},
+			loginbutton: {
+				loading: false,
+				disabled: true,
+			}
+		},
+		methods: {
+			login() {
+				this.loginbutton.loading = true
+				this.loginbutton.disabled = true
+				this.$http.post(baseurl + '/login',
+					{
+						logininfo: this.loginform
+					},
+					{ emulateJSON: true }).then(function (res) {
+						if (!res.ok) {
+							this.$notify('登录失败：服务器内部错误');
+							return
+						}
+						else {
+							const token = res.body.token
+							const Userid = JSON.stringify(res.body.Userid)
+							localStorage.setItem('User', Userid)
+							localStorage.setItem('token', token)
+						}
+						this.loginbutton.loading = false
+						this.loginbutton.disabled = false
+					}, function (res) {
+						if (res.status == 401) {
+							this.$notify('登录失败：用户名或密码错误');
+						}
+						else if (res.status == 403) {
+							this.$notify('登录失败：该账号已被禁止登陆');
+						}
+						else {
+							this.$notify('登录失败：服务器通信异常');
+						}
+						this.loginbutton.loading = false
+						this.loginbutton.disabled = false
+					});
+			},
+		},
+		watch: {
+			loginform: {
+				handler(newVal, oldVal) {
+					this.loginbutton.disabled = !(newVal.username && newVal.password && newVal.idecode)
+				},
+				deep: true
+			}
+		},
+	});
+</script>
+<style>
+	.loginform {
+		margin-top: 20%;
+		margin-left: 5%;
+		width: 90%;
+	}
+
+	.background {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+
+	.forgetpwd {
+		text-align: right
+	}
+
+	.idecode {
+		float: right;
+	}
+
+	.head {
+		text-align: center
+	}
+
+	.head img {
+		width: 90px
+	}
+
+	.head h1 {
+		font-size: 20px;
+		font-weight: 550;
+		margin-top: 5px;
+		margin-bottom: 25px;
+	}
+</style>
+
+
+</html>
