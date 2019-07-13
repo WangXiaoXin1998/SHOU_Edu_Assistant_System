@@ -18,12 +18,7 @@
 					:url=item.url></van-grid-item>
 			</van-grid>
 		</div>
-		<van-tabbar v-model="footeractive" fixed>
-			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
-			<van-tabbar-item icon="todo-list-o" url="table.html">课表</van-tabbar-item>
-			<van-tabbar-item icon="records" url="score.html">成绩</van-tabbar-item>
-			<van-tabbar-item icon="user-o" url="myinfor.html">我的</van-tabbar-item>
-		</van-tabbar>
+		<script type="text/javascript" src="js/footer.js"></script>
 	</div>
 </body>
 
@@ -33,15 +28,13 @@
 		data: {
 			footeractive: 0,
 			searchform: '',
-			User: {
-				grade: 'student',
-			},
+			User: {},
 			items: [
 				{
 					icon: 'records',
 					text: '成绩查询',
 					url: 'score.html',
-					grade: ['student'],
+					grade: [1],
 				},
 				// {
 				// 	icon: 'edit',
@@ -53,13 +46,13 @@
 					icon: 'todo-list-o',
 					text: '我的课表',
 					url: 'table.html',
-					grade: ['student'],
+					grade: [1],
 				},
 				{
 					icon: 'calender-o',
 					text: '年度校历',
 					url: 'calendar.html',
-					grade: ['student', 'teacher'],
+					grade: [1, 2],
 				},
 			],
 		},
@@ -69,7 +62,7 @@
 			},
 			haveGrade(item) {
 				for (i of item.grade) {
-					if (i == this.User.grade) {
+					if (i == this.User.authority) {
 						return true
 					}
 				}
@@ -79,7 +72,11 @@
 				window.location.href = "educationQA.html?value=" + encodeURI(encodeURI(this.searchform))
 			},
 		},
-		watch: {
+		mounted() {
+			if (!localStorage['token']) {
+				window.location.href = 'login.html'
+			}
+			this.User = JSON.parse(localStorage.User)
 		},
 	});
 </script>

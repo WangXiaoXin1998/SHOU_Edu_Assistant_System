@@ -11,12 +11,7 @@
 		<van-nav-bar title="我的课表" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 		</div>
-		<van-tabbar v-model="footeractive" fixed>
-			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
-			<van-tabbar-item icon="todo-list-o" url="table.html">课表</van-tabbar-item>
-			<van-tabbar-item icon="records" url="score.html">成绩</van-tabbar-item>
-			<van-tabbar-item icon="user-o" url="myinfor.html">我的</van-tabbar-item>
-		</van-tabbar>
+		<script type="text/javascript" src="js/footer.js"></script>
 	</div>
 </body>
 
@@ -26,16 +21,18 @@
 		data: {
 			footeractive: 1,
 			searchform: '',
-			User: {
-				grade: 'student',
-			},
+			User: {},
 		},
 		methods: {
 			goBack() {
 				history.go(-1);
 			},
 		},
-		watch: {
+		mounted() {
+			if (!localStorage['token']) {
+				window.location.href = 'login.html'
+			}
+			this.User = JSON.parse(localStorage.User)
 		},
 	});
 </script>
