@@ -21,25 +21,25 @@
 				<van-collapse-item v-for="(item,index) in QA" v-if="show(item)" :title=item.question :name=index>
 					{{item.answer}}<br />
 					<div class="button">
-						<van-button size="small" type="default" @click="handleRevise(item,index)">修改</van-button>
+						<van-button size="small" type="default" @click="handleUpdate(item,index)">修改</van-button>
 						<van-button size="small" type="danger" @click="handleDelete(item,index)">删除</van-button>
 					</div>
 				</van-collapse-item>
 			</van-collapse>
 			<!-- <van-panel v-for="(item,index) in QA"  v-if="show(item)" :title=item.question :desc=item.answer>
 				<div slot="footer">
-					<van-button size="small" @click="handleRevise(item,index)">修改</van-button>
+					<van-button size="small" @click="handleupdate(item,index)">修改</van-button>
 					<van-button size="small" type="danger" @click="handleDelete(item,index)">删除</van-button>
 				</div>
 			</van-panel> -->
 		</div>
-		<van-dialog v-model="reviseDialog" title="修改问答" @confirm='confirmRevise' show-cancel-button>
+		<van-dialog v-model="updateDialog" title="修改问答" @confirm='confirmupdate' show-cancel-button>
 			<van-cell-group>
-				<van-field v-model="reviseForm.question" required label="问题" type="textarea" placeholder="请输入问题"
+				<van-field v-model="updateForm.question" required label="问题" type="textarea" placeholder="请输入问题"
 					rows="1" autosize />
 			</van-cell-group>
 			<van-cell-group>
-				<van-field v-model="reviseForm.answer" required label="回答" type="textarea" placeholder="请输入回答" rows="1"
+				<van-field v-model="updateForm.answer" required label="回答" type="textarea" placeholder="请输入回答" rows="1"
 					autosize />
 			</van-cell-group>
 		</van-dialog>
@@ -63,9 +63,9 @@
 			active: 1,
 			loading: true,
 			searchform: '',
-			reviseDialog: false,
+			updateDialog: false,
 			addDialog: false,
-			reviseForm: { question: '', answer: '' },
+			updateForm: { question: '', answer: '' },
 			addForm: { question: '', answer: '' },
 			collapseactive: [],
 			QA: [],
@@ -102,14 +102,14 @@
 						this.$notify('新增失败：服务器通信异常');
 					})
 			},
-			handleRevise(item, index) {
-				this.reviseForm = item
-				this.reviseForm.index = index
-				this.reviseDialog = true
+			handleUpdate(item, index) {
+				this.updateForm = item
+				this.updateForm.index = index
+				this.updateDialog = true
 			},
-			confirmRevise() {
-				reviseform = { "QAid": this.reviseForm.id, "question": this.reviseForm.question, "answer": this.reviseForm.answer };
-				axios.post(baseurl + '/reviseQA', reviseform,
+			confirmupdate() {
+				updateform = { "QAid": this.updateForm.id, "question": this.updateForm.question, "answer": this.updateForm.answer };
+				axios.post(baseurl + '/updateQA', updateform,
 					{ headers: { 'Content-Type': 'application/json' } })
 					.then(res => {
 						message = res.data.message
@@ -121,8 +121,8 @@
 								message: '修改成功',
 								background: '#1989fa'
 							});
-							this.QA[this.reviseForm.index].question = this.reviseForm.question
-							this.QA[this.reviseForm.index].answer = this.reviseForm.answer
+							this.QA[this.updateForm.index].question = this.updateForm.question
+							this.QA[this.updateForm.index].answer = this.updateForm.answer
 						}
 					})
 					.catch(error => {
