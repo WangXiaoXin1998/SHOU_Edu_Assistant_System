@@ -1,0 +1,87 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>教务问答</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control">
+		<van-nav-bar title="教务问答" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-search v-model="searchform" placeholder="教务问答：请输入搜索关键词" show-action shape="round" @search="">
+				<div slot="action" @click="">搜索</div>
+			</van-search>
+			<center>
+				<van-loading v-show="loading" size="24px">加载中...</van-loading>
+			</center>
+			<van-collapse v-model="collapseactive">
+				<van-collapse-item v-for="(item,index) in QA" v-if="show(item)" :title=item.question :name=index>
+					{{item.answer}}
+				</van-collapse-item>
+			</van-collapse>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			active: 1,
+			searchform: '',
+			loading: true,
+			collapseactive: [],
+			User: {
+				grade: 'student',
+			},
+			QA: [],
+		},
+		methods: {
+			goBack() {
+				history.go(-1);
+			},
+			GetQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) return unescape(r[2]); return null;
+			},
+			show(obj) {
+				return obj.question.includes(this.searchform) || obj.answer.includes(this.searchform)
+			},
+			getQuestion() {
+				this.$http.get(baseurl + '/questions',
+					{
+
+					},
+					{ emulateJSON: true }).then(function (res) {
+						if (!res.ok) {
+							this.$notify('获取失败：服务器内部错误');
+							return
+						}
+						else {
+							this.QA = eval('(' + res.bodyText + ')')
+						}
+					}, function (res) {
+						this.$notify('获取失败：服务器通信异常');
+					});
+			},
+		},
+		watch: {
+		},
+		mounted() {
+			this.getQuestion()
+			this.searchform = decodeURI(this.GetQueryString("value"), "utf-8");
+			this.loading=false
+		},
+	});
+</script>
+<style>
+	.container {
+		margin-top: 45px;
+	}
+</style>
+
+
+</html>

@@ -1,0 +1,49 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>年度校历</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control">
+		<van-nav-bar title="年度校历" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-tabs v-model="active" swipeable color="#1f8cfa">
+				<van-tab v-for="year in calendar" :title="year+'-'+(year+1) + '学年'">
+					<img v-for="index in 2" :src="'images/calendar/'+year+'_'+index+'.png'" width="100%">
+				</van-tab>
+			</van-tabs>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			active: 1,
+			searchform: '',
+			User: {
+				grade: 'student',
+			},
+			calendar: [2018, 2019]
+		},
+		methods: {
+			goBack() {
+				history.go(-1);
+			},
+		},
+		watch: {
+		},
+	});
+</script>
+<style>
+	.container {
+		margin-top: 45px;
+	}
+</style>
+
+
+</html>

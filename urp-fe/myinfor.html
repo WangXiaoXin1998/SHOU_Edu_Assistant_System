@@ -1,0 +1,49 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>个人信息</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control">
+		<van-nav-bar title="个人信息" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+		</div>
+		<van-tabbar v-model="footeractive" fixed>
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="todo-list-o" url="table.html">课表</van-tabbar-item>
+			<van-tabbar-item icon="records" url="score.html">成绩</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="myinfor.html">我的</van-tabbar-item>
+		</van-tabbar>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			footeractive: 3,
+			searchform: '',
+			User: {
+				grade: 'student',
+			},
+		},
+		methods: {
+			goBack() {
+				history.go(-1);
+			},
+		},
+		watch: {
+		},
+	});
+</script>
+<style>
+	.container {
+		margin-top: 45px;
+	}
+</style>
+
+
+</html>

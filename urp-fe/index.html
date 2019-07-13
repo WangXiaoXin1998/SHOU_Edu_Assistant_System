@@ -1,0 +1,93 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>首页</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control">
+		<van-nav-bar title="教务辅助系统" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-search v-model="searchform" placeholder="教务问答：请输入搜索关键词" show-action shape="round" @search="search">
+				<div slot="action" @click="search">搜索</div>
+			</van-search>
+			<van-grid :gutter="10" column-num=3 square border=true clickable=true>
+				<van-grid-item v-for="item in items" v-if="haveGrade(item)" :icon=item.icon :text=item.text
+					:url=item.url></van-grid-item>
+			</van-grid>
+		</div>
+		<van-tabbar v-model="footeractive" fixed>
+			<van-tabbar-item icon="home-o" url="index.html">首页</van-tabbar-item>
+			<van-tabbar-item icon="todo-list-o" url="table.html">课表</van-tabbar-item>
+			<van-tabbar-item icon="records" url="score.html">成绩</van-tabbar-item>
+			<van-tabbar-item icon="user-o" url="myinfor.html">我的</van-tabbar-item>
+		</van-tabbar>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			footeractive: 0,
+			searchform: '',
+			User: {
+				grade: 'student',
+			},
+			items: [
+				{
+					icon: 'records',
+					text: '成绩查询',
+					url: 'score.html',
+					grade: ['student'],
+				},
+				// {
+				// 	icon: 'edit',
+				// 	text: '绩点查询',
+				// 	url: '',
+				// 	grade: ['student'],
+				// },
+				{
+					icon: 'todo-list-o',
+					text: '我的课表',
+					url: 'table.html',
+					grade: ['student'],
+				},
+				{
+					icon: 'calender-o',
+					text: '年度校历',
+					url: 'calendar.html',
+					grade: ['student', 'teacher'],
+				},
+			],
+		},
+		methods: {
+			goBack() {
+				history.go(-1);
+			},
+			haveGrade(item) {
+				for (i of item.grade) {
+					if (i == this.User.grade) {
+						return true
+					}
+				}
+				return false
+			},
+			search() {
+				window.location.href = "educationQA.html?value=" + encodeURI(encodeURI(this.searchform))
+			},
+		},
+		watch: {
+		},
+	});
+</script>
+<style>
+	.container {
+		margin-top: 45px;
+	}
+</style>
+
+
+</html>
