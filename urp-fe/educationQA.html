@@ -33,9 +33,6 @@
 			searchform: '',
 			loading: true,
 			collapseactive: [],
-			User: {
-				grade: 'student',
-			},
 			QA: [],
 		},
 		methods: {
@@ -71,9 +68,15 @@
 		watch: {
 		},
 		mounted() {
+			if (!localStorage['token']) {
+				window.location.href = 'login.html'
+			}
 			this.getQuestion()
 			this.searchform = decodeURI(this.GetQueryString("value"), "utf-8");
-			this.loading=false
+			if (!this.searchform) {
+				this.searchform = ''
+			}
+			this.loading = false
 		},
 	});
 </script>

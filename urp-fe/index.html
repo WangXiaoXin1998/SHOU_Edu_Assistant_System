@@ -28,12 +28,19 @@
 		data: {
 			footeractive: 0,
 			searchform: '',
+			authority: '',
 			User: {},
 			items: [
 				{
 					icon: 'records',
 					text: '成绩查询',
 					url: 'score.html',
+					grade: [1],
+				},
+				{
+					icon: 'search',
+					text: '问答管理',
+					url: 'manageQA.html',
 					grade: [1],
 				},
 				// {
@@ -52,7 +59,7 @@
 					icon: 'calender-o',
 					text: '年度校历',
 					url: 'calendar.html',
-					grade: [1, 2],
+					grade: [0],
 				},
 			],
 		},
@@ -62,7 +69,9 @@
 			},
 			haveGrade(item) {
 				for (i of item.grade) {
-					if (i == this.User.authority) {
+					if (i == 0) {
+						return true
+					} else if (this.authority.charAt(this.authority.length - i) == "1") {
 						return true
 					}
 				}
@@ -77,6 +86,7 @@
 				window.location.href = 'login.html'
 			}
 			this.User = JSON.parse(localStorage.User)
+			this.authority = (this.User.authority).toString(2)
 		},
 	});
 </script>

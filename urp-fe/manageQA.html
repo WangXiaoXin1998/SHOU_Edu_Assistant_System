@@ -1,0 +1,195 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>教务问答管理</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control">
+		<van-nav-bar title="教务问答管理" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-search v-model="searchform" placeholder="教务问答：请输入搜索关键词" show-action shape="round" @search="">
+				<div slot="action" @click="">搜索</div>
+			</van-search>
+			<center>
+				<van-loading v-show="loading" size="24px">加载中...</van-loading>
+			</center>
+			<van-button size="large" type="info" @click="handleAdd">新增问答</van-button>
+			<van-collapse v-model="collapseactive">
+				<van-collapse-item v-for="(item,index) in QA" v-if="show(item)" :title=item.question :name=index>
+					{{item.answer}}<br />
+					<div class="button">
+						<van-button size="small" type="default" @click="handleRevise(item,index)">修改</van-button>
+						<van-button size="small" type="danger" @click="handleDelete(item,index)">删除</van-button>
+					</div>
+				</van-collapse-item>
+			</van-collapse>
+			<!-- <van-panel v-for="(item,index) in QA"  v-if="show(item)" :title=item.question :desc=item.answer>
+				<div slot="footer">
+					<van-button size="small" @click="handleRevise(item,index)">修改</van-button>
+					<van-button size="small" type="danger" @click="handleDelete(item,index)">删除</van-button>
+				</div>
+			</van-panel> -->
+		</div>
+		<van-dialog v-model="reviseDialog" title="修改问答" @confirm='confirmRevise' show-cancel-button>
+			<van-cell-group>
+				<van-field v-model="reviseForm.question" required label="问题" type="textarea" placeholder="请输入问题"
+					rows="1" autosize />
+			</van-cell-group>
+			<van-cell-group>
+				<van-field v-model="reviseForm.answer" required label="回答" type="textarea" placeholder="请输入回答" rows="1"
+					autosize />
+			</van-cell-group>
+		</van-dialog>
+		<van-dialog v-model="addDialog" title="新增问答" @confirm='confirmAdd' show-cancel-button>
+			<van-cell-group>
+				<van-field v-model="addForm.question" required label="问题" type="textarea" placeholder="请输入问题" rows="1"
+					autosize />
+			</van-cell-group>
+			<van-cell-group>
+				<van-field v-model="addForm.answer" required label="回答" type="textarea" placeholder="请输入回答" rows="1"
+					autosize />
+			</van-cell-group>
+		</van-dialog>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			active: 1,
+			loading: true,
+			searchform: '',
+			reviseDialog: false,
+			addDialog: false,
+			reviseForm: { question: '', answer: '' },
+			addForm: { question: '', answer: '' },
+			collapseactive: [],
+			QA: [],
+		},
+		methods: {
+			goBack() {
+				history.go(-1);
+			},
+			show(obj) {
+				return obj.question.includes(this.searchform) || obj.answer.includes(this.searchform)
+			},
+			handleAdd() {
+				this.addDialog = true
+				this.addForm = { question: '', answer: '' }
+			},
+			confirmAdd() {
+				addform = { "question": this.addForm.question, "answer": this.addForm.answer };
+				axios.post(baseurl + '/addQA', addform,
+					{ headers: { 'Content-Type': 'application/json' } })
+					.then(res => {
+						message = res.data.message
+						if (message != '新增成功') {
+							this.$notify('新增失败：' + message);
+							return
+						} else {
+							Notify({
+								message: '新增成功',
+								background: '#1989fa'
+							});
+							this.QA.push({ question: this.addForm.question, answer: this.addForm.answer })
+						}
+					})
+					.catch(error => {
+						this.$notify('新增失败：服务器通信异常');
+					})
+			},
+			handleRevise(item, index) {
+				this.reviseForm = item
+				this.reviseForm.index = index
+				this.reviseDialog = true
+			},
+			confirmRevise() {
+				reviseform = { "QAid": this.reviseForm.id, "question": this.reviseForm.question, "answer": this.reviseForm.answer };
+				axios.post(baseurl + '/reviseQA', reviseform,
+					{ headers: { 'Content-Type': 'application/json' } })
+					.then(res => {
+						message = res.data.message
+						if (message != '修改成功') {
+							this.$notify('修改失败：' + message);
+							return
+						} else {
+							Notify({
+								message: '修改成功',
+								background: '#1989fa'
+							});
+							this.QA[this.reviseForm.index].question = this.reviseForm.question
+							this.QA[this.reviseForm.index].answer = this.reviseForm.answer
+						}
+					})
+					.catch(error => {
+						this.$notify('修改失败：服务器通信异常');
+					})
+			},
+			handleDelete(item, index) {
+				this.$dialog.confirm({
+					message: '确认删除该问答？'
+				}).then(() => {
+					deleteform = { "QAid": item.id };
+					axios.post(baseurl + '/deleteQA', deleteform,
+						{ headers: { 'Content-Type': 'application/json' } })
+						.then(res => {
+							message = res.data.message
+							if (message != '删除成功') {
+								this.$notify('删除失败：' + message);
+								return
+							} else {
+								Notify({
+									message: '删除成功',
+									background: '#1989fa'
+								});
+								this.QA.splice(this.getIndex(index), 1);
+							}
+						})
+						.catch(error => {
+							this.$notify('删除失败：服务器通信异常');
+						})
+				}).catch(() => { });
+			},
+			getQuestion() {
+				this.$http.get(baseurl + '/questions',
+					{},
+					{ emulateJSON: true }).then(function (res) {
+						if (!res.ok) {
+							this.$notify('获取失败：服务器内部错误');
+							return
+						}
+						else {
+							this.QA = eval('(' + res.bodyText + ')')
+						}
+					}, function (res) {
+						this.$notify('获取失败：服务器通信异常');
+					});
+			},
+		},
+		watch: {
+		},
+		mounted() {
+			if (!localStorage['token']) {
+				window.location.href = 'login.html'
+			}
+			this.getQuestion()
+			this.loading = false
+		},
+	});
+</script>
+<style>
+	.container {
+		margin-top: 45px;
+	}
+
+	.button {
+		float: right;
+	}
+</style>
+
+
+</html>
