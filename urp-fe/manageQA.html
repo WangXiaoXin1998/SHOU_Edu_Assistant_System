@@ -16,7 +16,9 @@
 			<center>
 				<van-loading v-show="loading" size="24px">加载中...</van-loading>
 			</center>
-			<van-button size="large" type="info" @click="handleAdd">新增问答</van-button>
+			<div class="buttonAdd">
+				<van-button round icon="plus" type="info" hairline @click="handleAdd"></van-button>
+			</div>
 			<van-collapse v-model="collapseactive">
 				<van-collapse-item v-for="(item,index) in QA" v-if="show(item)" :title=item.question :name=index>
 					{{item.answer}}<br />
@@ -26,12 +28,6 @@
 					</div>
 				</van-collapse-item>
 			</van-collapse>
-			<!-- <van-panel v-for="(item,index) in QA"  v-if="show(item)" :title=item.question :desc=item.answer>
-				<div slot="footer">
-					<van-button size="small" @click="handleupdate(item,index)">修改</van-button>
-					<van-button size="small" type="danger" @click="handleDelete(item,index)">删除</van-button>
-				</div>
-			</van-panel> -->
 		</div>
 		<van-dialog v-model="updateDialog" title="修改问答" @confirm='confirmupdate' show-cancel-button>
 			<van-cell-group>
@@ -83,23 +79,30 @@
 			},
 			confirmAdd() {
 				addform = { "question": this.addForm.question, "answer": this.addForm.answer };
-				axios.post(baseurl + '/addQA', addform,
-					{ headers: { 'Content-Type': 'application/json' } })
+				axios.post(baseurl + '/question', addform,
+					{ headers: { 'Content-Type': 'application/json', 'token': localStorage.token } })
 					.then(res => {
-						message = res.data.message
-						if (message != '新增成功') {
-							this.$notify('新增失败：' + message);
-							return
-						} else {
-							Notify({
-								message: '新增成功',
-								background: '#1989fa'
-							});
-							this.QA.push({ question: this.addForm.question, answer: this.addForm.answer })
-						}
+						this.$notify({
+							message: '新增成功',
+							background: '#1989fa'
+						});
+						this.QA.push({ question: this.addForm.question, answer: this.addForm.answer })
 					})
 					.catch(error => {
-						this.$notify('新增失败：服务器通信异常');
+						if (error.response.status) {
+							switch (error.response.status) {
+								case 401:
+									this.$notify('删除失败：token权限异常');
+									break;
+								case 500:
+									this.$notify('新增失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('新增失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('新增失败：服务器通信异常');
+						}
 					})
 			},
 			handleUpdate(item, index) {
@@ -108,66 +111,84 @@
 				this.updateDialog = true
 			},
 			confirmupdate() {
-				updateform = { "QAid": this.updateForm.id, "question": this.updateForm.question, "answer": this.updateForm.answer };
-				axios.post(baseurl + '/updateQA', updateform,
-					{ headers: { 'Content-Type': 'application/json' } })
+				updateform = { "question": this.updateForm.question, "answer": this.updateForm.answer };
+				axios.put(baseurl + '/question/' + this.updateForm.qid, updateform,
+					{ headers: { 'Content-Type': 'application/json', 'token': localStorage.token } })
 					.then(res => {
-						message = res.data.message
-						if (message != '修改成功') {
-							this.$notify('修改失败：' + message);
-							return
-						} else {
-							Notify({
-								message: '修改成功',
-								background: '#1989fa'
-							});
-							this.QA[this.updateForm.index].question = this.updateForm.question
-							this.QA[this.updateForm.index].answer = this.updateForm.answer
-						}
+						this.$notify({
+							message: '修改成功',
+							background: '#1989fa'
+						});
+						this.QA[this.updateForm.index].question = this.updateForm.question
+						this.QA[this.updateForm.index].answer = this.updateForm.answer
 					})
 					.catch(error => {
-						this.$notify('修改失败：服务器通信异常');
+						if (error.response.status) {
+							switch (error.response.status) {
+								case 401:
+									this.$notify('删除失败：token权限异常');
+									break;
+								case 500:
+									this.$notify('修改失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('修改失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('修改失败：服务器通信异常');
+						}
 					})
 			},
 			handleDelete(item, index) {
 				this.$dialog.confirm({
-					message: '确认删除该问答？'
+					message: '确认删除该条问答？'
 				}).then(() => {
-					deleteform = { "QAid": item.id };
-					axios.post(baseurl + '/deleteQA', deleteform,
-						{ headers: { 'Content-Type': 'application/json' } })
+					axios.delete(baseurl + '/question/' + item.qid,
+						{ headers: { 'Content-Type': 'application/json', 'token': localStorage.token } })
 						.then(res => {
-							message = res.data.message
-							if (message != '删除成功') {
-								this.$notify('删除失败：' + message);
-								return
-							} else {
-								Notify({
-									message: '删除成功',
-									background: '#1989fa'
-								});
-								this.QA.splice(this.getIndex(index), 1);
-							}
+							this.$notify({
+								message: '删除成功',
+								background: '#1989fa'
+							});
+							this.QA.splice(index, 1);
 						})
 						.catch(error => {
-							this.$notify('删除失败：服务器通信异常');
+							if (error.response.status) {
+								switch (error.response.status) {
+									case 401:
+										this.$notify('删除失败：token权限异常');
+										break;
+									case 500:
+										this.$notify('删除失败：服务器内部错误');
+										break;
+									default:
+										this.$notify('删除失败：服务器未知异常');
+								}
+							} else {
+								this.$notify('删除失败：服务器通信异常');
+							}
 						})
 				}).catch(() => { });
 			},
 			getQuestion() {
-				this.$http.get(baseurl + '/questions',
-					{},
-					{ emulateJSON: true }).then(function (res) {
-						if (!res.ok) {
-							this.$notify('获取失败：服务器内部错误');
-							return
+				axios.get(baseurl + '/questions',
+					{ headers: { 'Content-Type': 'application/json' } })
+					.then(res => {
+						this.QA = res.data
+					})
+					.catch(error => {
+						if (error.response.status) {
+							switch (error.response.status) {
+								case 500:
+									this.$notify('获取失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('获取失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('获取失败：服务器通信异常');
 						}
-						else {
-							this.QA = eval('(' + res.bodyText + ')')
-						}
-					}, function (res) {
-						this.$notify('获取失败：服务器通信异常');
-					});
+					})
 			},
 		},
 		watch: {
@@ -187,7 +208,14 @@
 	}
 
 	.button {
-		float: right;
+		text-align: center
+	}
+
+	.buttonAdd {
+		position: fixed;
+		right: 15;
+		bottom: 15;
+		z-index: 99
 	}
 </style>
 
