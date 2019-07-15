@@ -7,7 +7,7 @@
 <script type="text/javascript" src="js/js_lead-in.js"></script>
 
 <body>
-	<div id="control">
+	<div id="control" v-cloak>
 		<van-nav-bar title="我的课表" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 		</div>
@@ -19,6 +19,7 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
+			token: '',
 			footeractive: 1,
 			searchform: '',
 			User: {},
@@ -29,17 +30,21 @@
 			},
 		},
 		mounted() {
-			if (!localStorage['token']) {
+			if (localStorage['token']) {
+				this.token = localStorage['token']
+				this.User = JSON.parse(localStorage.User)
+			} else if (sessionStorage['token']) {
+				this.token = sessionStorage['token']
+				this.User = JSON.parse(sessionStorage.User)
+			}
+			if (!this.token) {
 				window.location.href = 'login.html'
 			}
-			this.User = JSON.parse(localStorage.User)
 		},
 	});
 </script>
+
 <style>
-	.container {
-		margin-top: 45px;
-	}
 </style>
 
 

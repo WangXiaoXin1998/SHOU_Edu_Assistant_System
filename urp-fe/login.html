@@ -11,7 +11,7 @@
 		<canvas id="Mycanvas"></canvas>
 		<script type="text/javascript" src="js/background.js"></script>
 	</div>
-	<div id="control">
+	<div id="control" v-cloak>
 		<div class="loginform">
 			<div class="head">
 				<img src="images/frame/schlogo.png">
@@ -85,10 +85,17 @@
 				axios.post(baseurl + '/login', loginform,
 					{ headers: { 'Content-Type': 'application/json' } })
 					.then(res => {
+						localStorage.clear()
+						sessionStorage.clear()
 						const token = res.data.token
 						const User = res.data.user
-						localStorage.setItem('token', token)
-						localStorage.setItem('User', JSON.stringify(User))
+						if (this.loginform.loginauto) {
+							localStorage.setItem('token', token)
+							localStorage.setItem('User', JSON.stringify(User))
+						} else {
+							sessionStorage.setItem('token', token)
+							sessionStorage.setItem('User', JSON.stringify(User))
+						}
 						window.location.href = "index.html";
 						this.changestate(false)
 					})
@@ -126,6 +133,11 @@
 					this.loginbutton.disabled = !(newVal.username && newVal.password && newVal.idecode)
 				},
 				deep: true
+			}
+		},
+		mounted() {
+			if (localStorage['token'] || sessionStorage['token']) {
+				window.location.href = 'index.html'
 			}
 		},
 	});

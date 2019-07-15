@@ -7,7 +7,7 @@
 <script type="text/javascript" src="js/js_lead-in.js"></script>
 
 <body>
-	<div id="control">
+	<div id="control" v-cloak>
 		<van-nav-bar title="教务辅助系统" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 			<van-search v-model="searchform" placeholder="教务问答：请输入搜索关键词" show-action shape="round" @search="search">
@@ -26,6 +26,7 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
+			token: '',
 			footeractive: 0,
 			searchform: '',
 			authority: '',
@@ -43,12 +44,6 @@
 					url: 'manageQA.html',
 					grade: [3],
 				},
-				// {
-				// 	icon: 'edit',
-				// 	text: '绩点查询',
-				// 	url: '',
-				// 	grade: ['student'],
-				// },
 				{
 					icon: 'todo-list-o',
 					text: '我的课表',
@@ -82,18 +77,22 @@
 			},
 		},
 		mounted() {
-			if (!localStorage['token']) {
+			if (localStorage['token']) {
+				this.token = localStorage['token']
+				this.User = JSON.parse(localStorage.User)
+			} else if (sessionStorage['token']) {
+				this.token = sessionStorage['token']
+				this.User = JSON.parse(sessionStorage.User)
+			}
+			if (!this.token) {
 				window.location.href = 'login.html'
 			}
-			this.User = JSON.parse(localStorage.User)
 			this.authority = (this.User.authority).toString(2)
 		},
 	});
 </script>
+
 <style>
-	.container {
-		margin-top: 45px;
-	}
 </style>
 
 

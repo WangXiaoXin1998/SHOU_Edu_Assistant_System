@@ -7,15 +7,12 @@
 <script type="text/javascript" src="js/js_lead-in.js"></script>
 
 <body>
-	<div id="control">
+	<div id="control" v-cloak>
 		<van-nav-bar title="教务问答管理" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 			<van-search v-model="searchform" placeholder="教务问答：请输入搜索关键词" show-action shape="round" @search="">
 				<div slot="action" @click="">搜索</div>
 			</van-search>
-			<center>
-				<van-loading v-show="loading" size="24px">加载中...</van-loading>
-			</center>
 			<div class="buttonAdd">
 				<van-button round icon="plus" type="info" hairline @click="handleAdd"></van-button>
 			</div>
@@ -49,6 +46,9 @@
 					autosize />
 			</van-cell-group>
 		</van-dialog>
+		<center>
+			<van-loading v-show="loading" size="24px">加载中...</van-loading>
+		</center>
 	</div>
 </body>
 
@@ -113,7 +113,7 @@
 			confirmupdate() {
 				updateform = { "question": this.updateForm.question, "answer": this.updateForm.answer };
 				axios.put(baseurl + '/question/' + this.updateForm.qid, updateform,
-					{ headers: { 'Content-Type': 'application/json', 'token': localStorage.token } })
+					{ headers: { 'Content-Type': 'application/json', 'token': this.token } })
 					.then(res => {
 						this.$notify({
 							message: '修改成功',
@@ -144,7 +144,7 @@
 					message: '确认删除该条问答？'
 				}).then(() => {
 					axios.delete(baseurl + '/question/' + item.qid,
-						{ headers: { 'Content-Type': 'application/json', 'token': localStorage.token } })
+						{ headers: { 'Content-Type': 'application/json', 'token': this.token } })
 						.then(res => {
 							this.$notify({
 								message: '删除成功',
@@ -175,6 +175,7 @@
 					{ headers: { 'Content-Type': 'application/json' } })
 					.then(res => {
 						this.QA = res.data
+						this.loading = false;
 					})
 					.catch(error => {
 						if (error.response.status) {
@@ -188,25 +189,26 @@
 						} else {
 							this.$notify('获取失败：服务器通信异常');
 						}
+						this.loading = false;
 					})
 			},
 		},
 		watch: {
 		},
 		mounted() {
-			if (!localStorage['token']) {
+			if (localStorage['token']) {
+				this.token = localStorage['token']
+			} else if (sessionStorage['token']) {
+				this.token = sessionStorage['token']
+			}
+			if (!this.token) {
 				window.location.href = 'login.html'
 			}
 			this.getQuestion()
-			this.loading = false
 		},
 	});
 </script>
 <style>
-	.container {
-		margin-top: 45px;
-	}
-
 	.button {
 		text-align: center
 	}
