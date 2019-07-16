@@ -58,7 +58,7 @@
 				} else if (!this.errormessage.newpwd && !this.errormessage.checkpwd && this.pwdform.newpwd.length != 0 && this.pwdform.checkpwd.length != 0) {
 					this.loading = true
 					pwdform = { "oldpwd": this.pwdform.oldpwd, "newpwd": this.pwdform.newpwd };
-					axios.put(baseurl + '/password', ,
+					axios.put(baseurl + '/password', pwdform,
 						{ headers: { 'Content-Type': 'application/json', 'token': token } })
 						.then(res => {
 							console.log(res)
