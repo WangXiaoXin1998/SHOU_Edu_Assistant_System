@@ -52,11 +52,17 @@
 				if (this.pwdform.oldpwd.length == 0) {
 					this.errormessage.oldpwd = true
 					return
+				} else if (this.pwdform.newpwd.length == 0) {
+					this.errormessage.newpwd = true
+					return
 				} else if (!this.errormessage.newpwd && !this.errormessage.checkpwd && this.pwdform.newpwd.length != 0 && this.pwdform.checkpwd.length != 0) {
 					this.loading = true
-					axios.get(baseurl + '/',
-						{ headers: { 'Content-Type': 'application/json' } })
+					pwdform = { "oldpwd": this.pwdform.oldpwd, "newpwd": this.pwdform.newpwd };
+					axios.put(baseurl + '/password', ,
+						{ headers: { 'Content-Type': 'application/json', 'token': token } })
 						.then(res => {
+							console.log(res)
+							localStorage.setItem('token', res.data.token)
 							this.$notify({
 								message: '修改成功',
 								background: '#1989fa'
@@ -90,7 +96,7 @@
 		watch: {
 			pwdform: {
 				handler(newVal, oldVal) {
-					reg = /^[0-9A-Za-z]{6,20}$/
+					reg = /^[0-9A-Za-z]*$/
 					if (newVal.oldpwd.length > 0) {
 						this.errormessage.oldpwd = false
 					}
