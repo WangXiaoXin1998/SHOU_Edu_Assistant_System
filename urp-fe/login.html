@@ -17,36 +17,49 @@
 				<img src="images/frame/schlogo.png">
 				<h1>教务辅助系统</h1>
 			</div>
-			<van-cell-group>
-				<van-field v-model="loginform.username" :disabled="formable.username" center clearable label="账号"
-					placeholder="请输入学工号" size="large" />
-			</van-cell-group>
-			<van-cell-group>
-				<van-field v-model="loginform.password" :disabled="formable.password" center clearable label="密码"
-					type="password" placeholder="请输入密码" size="large" />
-			</van-cell-group>
-			<van-cell-group>
+			<div v-if="!autoLogin.autoSign">
+				<van-cell-group>
+					<van-field v-model="loginform.username" :disabled="formable.username" center clearable label="账号"
+						placeholder="请输入学工号" size="large" />
+				</van-cell-group>
+				<van-cell-group>
+					<van-field v-model="loginform.password" :disabled="formable.password" center clearable label="密码"
+						type="password" placeholder="请输入密码" size="large" />
+				</van-cell-group>
+				<van-cell-group>
+					<van-row>
+						<van-col span="16">
+							<van-field v-model="loginform.idecode" :disabled="formable.idecode" center clearable
+								label="验证码" placeholder="请输入验证码" size="large">
+						</van-col>
+						<van-col span="8">
+							<img src="images/frame/code.jpg" height="48px" class="idecode">
+						</van-col>
+					</van-row>
+				</van-cell-group>
+				<br>
 				<van-row>
-					<van-col span="16">
-						<van-field v-model="loginform.idecode" :disabled="formable.idecode" center clearable label="验证码"
-							placeholder="请输入验证码" size="large">
+					<van-col span="12">
+						<van-checkbox v-model="loginform.loginauto">自动登录</van-checkbox>
 					</van-col>
-					<van-col span="8">
-						<img src="images/frame/code.jpg" height="48px" class="idecode">
-					</van-col>
+					<van-col span="12" class="forgetpwd">忘记密码？</van-col>
 				</van-row>
-			</van-cell-group>
-			<br>
-			<van-row>
-				<van-col span="12">
-					<van-checkbox v-model="loginform.loginauto">自动登录</van-checkbox>
-				</van-col>
-				<van-col span="12" class="forgetpwd">忘记密码？</van-col>
-			</van-row>
-			<br>
-			<van-button round type="info" size="large" class="loginbutton" @click="login"
-				:disabled="loginbutton.disabled" :loading="loginbutton.loading" loading-type="spinner">登录
-			</van-button>
+				<br>
+				<van-button round type="info" size="large" class="loginbutton" @click="login"
+					:disabled="loginbutton.disabled" :loading="loginbutton.loading" loading-type="spinner">登录
+				</van-button>
+			</div>
+			<div v-if="autoLogin.autoSign">
+				<div class="autoTips">{{autoLogin.autoName}}，欢迎回来！</div>
+				<van-button round type="info" size="large" class="loginbutton"
+					@click="window.location.href='index.html'" :loading="loginbutton.loading" loading-type="spinner">
+					一键登录
+				</van-button>
+				<br><br>
+				<van-button round plain type="info" size="large" class="loginbutton" @click="autoLogin.autoSign=0"
+					:loading="loginbutton.loading" loading-type="spinner">其它账号登录
+				</van-button>
+			</div>
 		</div>
 	</div>
 </body>
@@ -55,6 +68,10 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
+			autoLogin: {
+				autoSign: 0,
+				autoName: '',
+			},
 			loginform: {
 				username: '',
 				password: '',
@@ -137,7 +154,13 @@
 		},
 		mounted() {
 			if (localStorage['token'] || sessionStorage['token']) {
-				window.location.href = 'index.html'
+				if (JSON.parse(localStorage.User).name) {
+					this.autoLogin.autoName = JSON.parse(localStorage.User).name
+					this.autoLogin.autoSign = 1
+				} else if (JSON.parse(sessionStorage.User).name) {
+					this.autoLogin.autoName = JSON.parse(sessionStorage.User).name
+					this.autoLogin.autoSign = 1
+				}
 			}
 		},
 	});
@@ -176,6 +199,14 @@
 		font-weight: 550;
 		margin-top: 5px;
 		margin-bottom: 25px;
+	}
+
+	.autoTips {
+		text-align: center;
+		font-size: 20px;
+		margin-top:20px;
+		margin-bottom:30px;
+		font-weight: 400;
 	}
 </style>
 

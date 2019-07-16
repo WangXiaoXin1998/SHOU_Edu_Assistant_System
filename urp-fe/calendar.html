@@ -23,27 +23,13 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
-			token: '',
 			active: 1,
-			User: {
-				grade: 'student',
-			},
 			calendar: [2018, 2019]
 		},
 		methods: {
-			goBack() {
-				history.go(-1);
-			},
 		},
 		mounted() {
-			if (localStorage['token']) {
-				this.token = localStorage['token']
-			} else if (sessionStorage['token']) {
-				this.token = sessionStorage['token']
-			}
-			if (!this.token) {
-				window.location.href = 'login.html'
-			}
+			checkToken()
 		},
 	});
 </script>

@@ -2,27 +2,37 @@
 <html>
 
 <head>
-	<title>个人信息</title>
+	<title>个人中心</title>
 </head>
 <script type="text/javascript" src="js/js_lead-in.js"></script>
 
 <body>
 	<div id="control" v-cloak>
-		<van-nav-bar title="个人信息" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<van-nav-bar title="个人中心" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 			<img class="user-poster"
 				src="https://img.yzcdn.cn/public_files/2017/10/23/8690bb321356070e0b8c4404d087f8fd.png">
 			<van-cell-group>
-				<van-cell icon="records" title="教务通知" is-link />
+				<van-cell icon="bullhorn-o" title="教务通知" is-link />
 			</van-cell-group>
 			<van-cell-group>
-				<van-cell icon="records" title="我的消息" is-link />
+				<van-cell icon="comment-o" title="我的消息" is-link />
 			</van-cell-group>
 			<van-cell-group>
-				<van-cell icon="points" title="学程绩点" is-link />
+				<van-cell icon="envelop-o" title="密保设置" is-link />
 			</van-cell-group>
 			<van-cell-group>
-				<van-cell icon="points" title="关于我们" is-link />
+				<van-cell icon="sign" title="修改密码" @click="window.location.href='changepwd.html'" is-link />
+			</van-cell-group>
+			<van-cell-group>
+				<van-cell icon="label-o" value="V 1.0.0 beta" @click="window.location.href='update.html'" is-link>
+					<template slot="title">
+						<span class="custom-title">版本信息</span>
+					</template>
+				</van-cell>
+			</van-cell-group>
+			<van-cell-group>
+				<van-cell icon="info-o" @click="window.location.href='about.html'" title="关于我们" is-link />
 			</van-cell-group>
 			<div class="buttoncontainer">
 				<van-button plain hairline round type="info" size="large" @click="logout">退出登录</van-button>
@@ -36,14 +46,9 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
-			token: '',
 			footeractive: 3,
-			User: {},
 		},
 		methods: {
-			goBack() {
-				history.go(-1);
-			},
 			logout() {
 				this.$dialog.confirm({
 					message: '确认要退出登录吗？'
@@ -55,25 +60,23 @@
 			},
 		},
 		mounted() {
-			if (localStorage['token']) {
-				this.token = localStorage['token']
-				this.User = JSON.parse(localStorage.User)
-			} else if (sessionStorage['token']) {
-				this.token = sessionStorage['token']
-				this.User = JSON.parse(sessionStorage.User)
-			}
-			if (!this.token) {
-				window.location.href = 'login.html'
-			}
+			checkToken()
 		},
 	});
 </script>
 <style>
 	.user-poster {
-
 		width: 100%;
 		height: 53vw;
 		display: block;
+		margin-bottom: 10px;
+	}
+
+	.user-link {
+		padding: 15px 0;
+		font-size: 12px;
+		text-align: center;
+		background-color: #fff;
 	}
 
 	.van-icon {

@@ -1,0 +1,87 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>更新日志</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+<script type="text/javascript" src="js/element.js"></script>
+<link rel="stylesheet" href="css/element.css">
+
+<body>
+	<div id="control" v-cloak>
+		<van-nav-bar title="更新日志" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<div class="head">
+				<img src="images/frame/schlogo.png" width="90px">
+				<div>教务辅助系统</div>
+			</div>
+			<el-card v-for="update in update" class="box-card">
+				<div slot="header" class="clearfix">
+					<span>
+						<van-icon name="label" />&emsp;V{{update.version}}</span>
+					<nobr style="float: right; font-size:14px;padding: 3px 0">{{update.time}}</nobr>
+				</div>
+				<div v-html="update.content"></div>
+			</el-card>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			active: 1,
+			update: [
+				{
+					version: '1.0.0 beta',
+					time: '2019-10-01',
+					content: '1.用户UI界面优化，增强交互体验。<br>2.修改登录方式，自动登录更快捷。<br>3.更多教务功能正式上线。<br>',
+				},
+			],
+		},
+		methods: {
+		},
+		mounted() {
+			checkToken()
+		},
+	});
+</script>
+
+<style>
+	body {
+		background-color: rgb(250, 250, 250);
+	}
+
+	.head {
+		margin-top: 70px;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.head div {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+
+	.card {
+		width: 90%;
+		margin-top: 15px;
+		margin-left: 5%;
+		line-height: 20px;
+		/* box-shadow: 0.5px 0.5px 0.5px 0.5px #888888;
+		background: white; */
+	}
+
+	.divider {
+		margin-top: 15px;
+		color: black;
+		padding: '0 15px';
+		font-size: 18px;
+		font-weight: 350;
+	}
+</style>
+
+
+</html>

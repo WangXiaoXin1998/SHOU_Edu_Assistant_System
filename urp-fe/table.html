@@ -19,27 +19,13 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
-			token: '',
 			footeractive: 1,
 			searchform: '',
-			User: {},
 		},
 		methods: {
-			goBack() {
-				history.go(-1);
-			},
 		},
 		mounted() {
-			if (localStorage['token']) {
-				this.token = localStorage['token']
-				this.User = JSON.parse(localStorage.User)
-			} else if (sessionStorage['token']) {
-				this.token = sessionStorage['token']
-				this.User = JSON.parse(sessionStorage.User)
-			}
-			if (!this.token) {
-				window.location.href = 'login.html'
-			}
+			checkToken()
 		},
 	});
 </script>

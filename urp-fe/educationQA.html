@@ -36,9 +36,6 @@
 			QA: [],
 		},
 		methods: {
-			goBack() {
-				history.go(-1);
-			},
 			GetQueryString(name) {
 				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
 				var r = window.location.search.substr(1).match(reg);
@@ -57,6 +54,10 @@
 					.catch(error => {
 						if (error.response.status) {
 							switch (error.response.status) {
+								case 401:
+									this.$notify('获取失败：token权限异常');
+									window.location.href = "login.html"
+									break;
 								case 500:
 									this.$notify('获取失败：服务器内部错误');
 									break;
@@ -73,14 +74,7 @@
 		watch: {
 		},
 		mounted() {
-			if (localStorage['token']) {
-				this.token = localStorage['token']
-			} else if (sessionStorage['token']) {
-				this.token = sessionStorage['token']
-			}
-			if (!this.token) {
-				window.location.href = 'login.html'
-			}
+			checkToken()
 			this.getQuestion()
 			this.searchform = decodeURI(this.GetQueryString("value"), "utf-8");
 			if (!this.searchform) {

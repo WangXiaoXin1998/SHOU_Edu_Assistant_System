@@ -69,11 +69,9 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
-			token: '',
 			footeractive: 2,
 			activeNames: [],
 			loading: true,
-			User: {},
 			totalGPA: 0,
 			totalCredit: 0,
 			totalhaveCredit: 0,
@@ -81,9 +79,6 @@
 			score: []
 		},
 		methods: {
-			goBack() {
-				history.go(-1);
-			},
 			getGPA(score) {
 				if (score >= 90) {
 					return 4.0
@@ -135,8 +130,8 @@
 				this.totalGPA = (this.totalGPA / this.totalhaveCredit).toFixed(2)
 			},
 			getScore() {
-				axios.get(baseurl + '/score/' + this.User.userid,
-					{ headers: { 'Content-Type': 'application/json', 'token': this.token } })
+				axios.get(baseurl + '/score/' + User.userid,
+					{ headers: { 'Content-Type': 'application/json', 'token': token } })
 					.then(res => {
 						(res.data).sort(this.compareUp('term', res.data))
 						this.score = res.data
@@ -149,6 +144,10 @@
 						console.log(error)
 						if (error.response.status) {
 							switch (error.response.status) {
+								case 401:
+									this.$notify('获取失败：token权限异常');
+									window.location.href = "login.html"
+									break;
 								case 500:
 									this.$notify('获取失败：服务器内部错误');
 									break;
@@ -185,26 +184,12 @@
 			}
 		},
 		mounted() {
-			if (localStorage['token']) {
-				this.token = localStorage['token']
-				this.User = JSON.parse(localStorage.User)
-			} else if (sessionStorage['token']) {
-				this.token = sessionStorage['token']
-				this.User = JSON.parse(sessionStorage.User)
-			}
-			if (!this.token) {
-				window.location.href = 'login.html'
-			}
+			checkToken()
 			this.getScore()
 		},
 	});
 </script>
 <style>
-	.container {
-		margin-top: 45px;
-		margin-bottom: 55px;
-	}
-
 	.title {
 		text-align: center;
 		margin-top: -10px;

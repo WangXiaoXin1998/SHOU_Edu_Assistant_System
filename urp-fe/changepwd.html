@@ -1,0 +1,127 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>修改密码</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control" v-cloak>
+		<van-nav-bar title="修改密码" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<br>
+			<van-cell-group>
+				<van-field v-model="pwdform.oldpwd" type="password" label="旧密码" placeholder="请输入旧密码"
+					:error-message="errormessage.oldpwd?'请输入旧密码':''" required />
+			</van-cell-group>
+			<van-cell-group>
+				<van-field v-model="pwdform.newpwd" type="password" label="新密码" placeholder="请输入新密码"
+					:error-message="errormessage.newpwd?'密码必须为6-20位的数字或字母':''" required />
+			</van-cell-group>
+			<van-cell-group>
+				<van-field v-model="pwdform.checkpwd" type="password" label="确认密码" placeholder="请再输一次新密码"
+					:error-message="errormessage.checkpwd?'两次密码输入不一致':''" required />
+			</van-cell-group>
+			<div class="buttoncontainer">
+				<van-button round type="info" size="large" :loading="loading" @click="changepwd">确认修改</van-button>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			footeractive: 3,
+			pwdform: {
+				oldpwd: '',
+				newpwd: '',
+				checkpwd: '',
+			},
+			errormessage: {
+				oldpwd: false,
+				newpwd: false,
+				checkpwd: false,
+			},
+			loading: false,
+		},
+		methods: {
+			changepwd() {
+				if (this.pwdform.oldpwd.length == 0) {
+					this.errormessage.oldpwd = true
+					return
+				} else if (!this.errormessage.newpwd && !this.errormessage.checkpwd && this.pwdform.newpwd.length != 0 && this.pwdform.checkpwd.length != 0) {
+					this.loading = true
+					axios.get(baseurl + '/',
+						{ headers: { 'Content-Type': 'application/json' } })
+						.then(res => {
+							this.$notify({
+								message: '修改成功',
+								background: '#1989fa'
+							});
+							this.loading = false;
+						})
+						.catch(error => {
+							if (error.response.status) {
+								switch (error.response.status) {
+									case 401:
+										this.$notify('修改失败：token权限异常');
+										window.location.href = "login.html"
+										break;
+									case 500:
+										this.$notify('修改失败：服务器内部错误');
+										break;
+									default:
+										this.$notify('修改失败：服务器未知异常');
+								}
+							} else {
+								this.$notify('修改失败：服务器通信异常');
+							}
+							this.loading = false;
+						})
+				}
+			}
+		},
+		mounted() {
+			checkToken()
+		},
+		watch: {
+			pwdform: {
+				handler(newVal, oldVal) {
+					reg = /^[0-9A-Za-z]{6,20}$/
+					if (newVal.oldpwd.length > 0) {
+						this.errormessage.oldpwd = false
+					}
+					if ((newVal.newpwd.length > 0 && newVal.newpwd.length < 6) || newVal.newpwd.length > 20 || !reg.test(newVal.newpwd)) {
+						this.errormessage.newpwd = true
+					} else {
+						this.errormessage.newpwd = false
+					}
+					if (newVal.newpwd != newVal.checkpwd && newVal.checkpwd != '') {
+						this.errormessage.checkpwd = true
+					} else {
+						this.errormessage.checkpwd = false
+					}
+				},
+				deep: true
+			}
+		}
+	});
+</script>
+<style>
+	body {
+		background-color: rgb(250, 250, 250);
+	}
+
+	.buttoncontainer {
+		width: 96%;
+		margin-left: 2%;
+		margin-top: 20px;
+		text-align: center;
+	}
+</style>
+
+
+</html>
