@@ -53,9 +53,7 @@
 				this.$dialog.confirm({
 					message: '确认要退出登录吗？'
 				}).then(() => {
-					localStorage.clear()
-					sessionStorage.clear()
-					window.location.href = 'login.html'
+					logout()
 				}).catch(() => { });
 			},
 		},

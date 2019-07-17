@@ -17,3 +17,9 @@ function checkToken(){
 function goBack() {
 	history.go(-1);
 }
+
+function logout() {
+    localStorage.clear()
+    sessionStorage.clear()
+    window.location.href = "login.html"
+}

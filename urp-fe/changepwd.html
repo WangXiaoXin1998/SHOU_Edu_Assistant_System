@@ -58,23 +58,34 @@
 				} else if (!this.errormessage.newpwd && !this.errormessage.checkpwd && this.pwdform.newpwd.length != 0 && this.pwdform.checkpwd.length != 0) {
 					this.loading = true
 					pwdform = { "oldpwd": this.pwdform.oldpwd, "newpwd": this.pwdform.newpwd };
-					axios.put(baseurl + '/password', pwdform,
+					axios.put(baseurl + '/password/' + User.userid, pwdform,
 						{ headers: { 'Content-Type': 'application/json', 'token': token } })
 						.then(res => {
 							console.log(res)
-							localStorage.setItem('token', res.data.token)
+							if (localStorage['token']) {
+								localStorage.setItem('token', res.data.token)
+							} else if (sessionStorage['token']) {
+								sessionStorage.setItem('token', res.data.token)
+							}
 							this.$notify({
-								message: '修改成功',
+								message: '修改成功：请牢记新密码',
 								background: '#1989fa'
 							});
 							this.loading = false;
 						})
 						.catch(error => {
+							console.log(error)
 							if (error.response.status) {
 								switch (error.response.status) {
+									case 400:
+										this.$notify('修改失败：参数格式错误');
+										break;
 									case 401:
 										this.$notify('修改失败：token权限异常');
-										window.location.href = "login.html"
+										logout()
+										break;
+									case 409:
+										this.$notify('修改失败：旧密码错误');
 										break;
 									case 500:
 										this.$notify('修改失败：服务器内部错误');

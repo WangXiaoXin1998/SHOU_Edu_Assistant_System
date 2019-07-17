@@ -83,14 +83,15 @@
 							message: '新增成功',
 							background: '#1989fa'
 						});
-						this.QA.push({ question: this.addForm.question, answer: this.addForm.answer })
+						this.QA.push({ qid: res.data.qid, question: res.data.question, answer: res.data.answer })
 					})
 					.catch(error => {
+						console.log(error)
 						if (error.response.status) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('新增失败：token权限异常');
-									window.location.href = "login.html"
+									logout();
 									break;
 								case 500:
 									this.$notify('新增失败：服务器内部错误');
@@ -125,6 +126,7 @@
 							switch (error.response.status) {
 								case 401:
 									this.$notify('修改失败：token权限异常');
+									logout();
 									break;
 								case 500:
 									this.$notify('修改失败：服务器内部错误');
@@ -155,6 +157,7 @@
 								switch (error.response.status) {
 									case 401:
 										this.$notify('删除失败：token权限异常');
+										logout();
 										break;
 									case 500:
 										this.$notify('删除失败：服务器内部错误');
