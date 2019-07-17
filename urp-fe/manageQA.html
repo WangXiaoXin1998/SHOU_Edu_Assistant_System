@@ -86,8 +86,7 @@
 						this.QA.push({ qid: res.data.qid, question: res.data.question, answer: res.data.answer })
 					})
 					.catch(error => {
-						console.log(error)
-						if (error.response.status) {
+						if (error.hasOwnProperty('response.status')) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('新增失败：token权限异常');
@@ -122,7 +121,7 @@
 						this.QA[this.updateForm.index].answer = this.updateForm.answer
 					})
 					.catch(error => {
-						if (error.response.status) {
+						if (error.hasOwnProperty('response.status')) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('修改失败：token权限异常');
@@ -153,7 +152,7 @@
 							this.QA.splice(index, 1);
 						})
 						.catch(error => {
-							if (error.response.status) {
+							if (error.hasOwnProperty('response.status')) {
 								switch (error.response.status) {
 									case 401:
 										this.$notify('删除失败：token权限异常');
@@ -179,7 +178,7 @@
 						this.loading = false;
 					})
 					.catch(error => {
-						if (error.response.status) {
+						if (error.hasOwnProperty('response.status')) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('获取失败：token权限异常');

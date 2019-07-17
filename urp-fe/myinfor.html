@@ -10,8 +10,22 @@
 	<div id="control" v-cloak>
 		<van-nav-bar title="个人中心" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
-			<img class="user-poster"
-				src="https://img.yzcdn.cn/public_files/2017/10/23/8690bb321356070e0b8c4404d087f8fd.png">
+			<div class="box">
+				<div class="home_top">
+					<van-row type="flex" gutter="30">
+						<van-col span="1"></van-col>
+						<van-col span="7">
+							<div class="image">
+								<div class="name">{{head.username.charAt(head.username.length-1)}}</div>
+							</div>
+						</van-col>
+						<van-col span="14">
+							<div class="username">{{head.username}}</div>
+							<div class="userid">ID：{{head.userid}}</div>
+						</van-col>
+					</van-row>
+				</div>
+			</div>
 			<van-cell-group>
 				<van-cell icon="bullhorn-o" title="教务通知" is-link />
 			</van-cell-group>
@@ -47,6 +61,10 @@
 		el: '#control',
 		data: {
 			footeractive: 3,
+			head: {
+				userid: 0,
+				username: '',
+			}
 		},
 		methods: {
 			logout() {
@@ -59,6 +77,8 @@
 		},
 		mounted() {
 			checkToken()
+			this.head.userid = User.userid
+			this.head.username = User.name
 		},
 	});
 </script>
@@ -87,6 +107,65 @@
 		margin-left: 2%;
 		margin-top: 15px;
 		text-align: center;
+	}
+
+	.box {
+		width: 100%;
+		margin: auto;
+		overflow: hidden;
+		height: 160px;
+	}
+
+	.home_top {
+		position: relative;
+		width: 100%;
+		height: 100px;
+		text-align: center;
+		line-height: 50px;
+	}
+
+	.home_top:after {
+		width: 140%;
+		height: 130px;
+		position: absolute;
+		left: -20%;
+		top: 0;
+		z-index: -1;
+		content: '';
+		border-radius: 0 0 50% 50%;
+		background: linear-gradient(#2CBAF9, #04A9F4);
+	}
+
+	.name {
+		color: white;
+		font-size: 45px;
+		font-weight: 500;
+		margin-top: 17px;
+	}
+
+	.username {
+		color: white;
+		float: left;
+		font-size: 30px;
+		font-weight: 400;
+		margin-top: 25px;
+		line-height: 35px;
+	}
+
+	.userid {
+		color: white;
+		float: left;
+		font-size: 18px;
+		font-weight: 400;
+	}
+
+	.image {
+		margin-top: 15px;
+		display: inline-block;
+		border-radius: 50px;
+		width: 90px;
+		height: 90px;
+		background-color: rgb(214, 214, 214)
 	}
 </style>
 

@@ -61,7 +61,7 @@
 					axios.put(baseurl + '/password/' + User.userid, pwdform,
 						{ headers: { 'Content-Type': 'application/json', 'token': token } })
 						.then(res => {
-							console.log(res)
+							token = res.data.token
 							if (localStorage['token']) {
 								localStorage.setItem('token', res.data.token)
 							} else if (sessionStorage['token']) {
@@ -74,8 +74,7 @@
 							this.loading = false;
 						})
 						.catch(error => {
-							console.log(error)
-							if (error.response.status) {
+							if (error.hasOwnProperty('response.status')) {
 								switch (error.response.status) {
 									case 400:
 										this.$notify('修改失败：参数格式错误');

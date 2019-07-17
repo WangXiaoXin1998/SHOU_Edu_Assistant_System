@@ -117,7 +117,7 @@
 						this.changestate(false)
 					})
 					.catch(error => {
-						if (error.response.status) {
+						if (error.hasOwnProperty('response.status')) {
 							switch (error.response.status) {
 								case 400:
 									this.$notify('登录失败：账号不存在');
@@ -137,6 +137,7 @@
 								default:
 									this.$notify('登录失败：服务器未知异常');
 							}
+							return
 						} else {
 							this.$notify('登录失败：服务器通信异常');
 						}
@@ -204,8 +205,8 @@
 	.autoTips {
 		text-align: center;
 		font-size: 20px;
-		margin-top:20px;
-		margin-bottom:30px;
+		margin-top: 20px;
+		margin-bottom: 30px;
 		font-weight: 400;
 	}
 </style>
