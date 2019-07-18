@@ -11,7 +11,8 @@
 		<van-nav-bar title="个人中心" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
 			<div class="box">
-				<div class="home_top">
+				<div class="home_top"></div>
+				<div class="titlehead">
 					<van-row type="flex" gutter="30">
 						<van-col span="1"></van-col>
 						<van-col span="7">
@@ -19,8 +20,8 @@
 								<div class="name">{{head.username.charAt(head.username.length-1)}}</div>
 							</div>
 						</van-col>
-						<van-col span="14">
-							<div class="username">{{head.username}}</div>
+						<van-col>
+							<div class="username">{{head.username}}</div><br><br>
 							<div class="userid">ID：{{head.userid}}</div>
 						</van-col>
 					</van-row>
@@ -126,7 +127,7 @@
 
 	.home_top:after {
 		width: 140%;
-		height: 130px;
+		height: 140px;
 		position: absolute;
 		left: -20%;
 		top: 0;
@@ -140,27 +141,32 @@
 		color: white;
 		font-size: 45px;
 		font-weight: 500;
-		margin-top: 17px;
+		margin-top: 14px;
+		margin-left: 22px;
 	}
 
 	.username {
 		color: white;
 		float: left;
+		margin-top: 10px;
 		font-size: 30px;
 		font-weight: 400;
-		margin-top: 25px;
 		line-height: 35px;
 	}
 
 	.userid {
 		color: white;
+		margin-top: 10px;
 		float: left;
 		font-size: 18px;
 		font-weight: 400;
 	}
 
+	.titlehead {
+		margin-top: -81px;
+	}
+
 	.image {
-		margin-top: 15px;
 		display: inline-block;
 		border-radius: 50px;
 		width: 90px;
