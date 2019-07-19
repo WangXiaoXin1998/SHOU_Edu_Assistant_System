@@ -10,6 +10,123 @@
 	<div id="control" v-cloak>
 		<van-nav-bar title="我的课表" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
+			<van-tabs v-model="tabactive" swipeable color="#1f8cfa">
+				<van-tab title="课程表">
+					<div style="height:12px;">
+						<van-row>
+							<van-col span="3">1</van-col>
+							<van-col span="3">专业英语@临1234</van-col>
+							<van-col span="3">计算机体系结构@临1234</van-col>
+							<van-col span="3">毛泽东思想@临港1234</van-col>
+							<van-col span="3">毛泽东思想@临港1234</van-col>
+							<van-col span="3">毛泽东思想@临港1234</van-col>
+							<van-col span="3"></van-col>
+							<van-col span="3"></van-col>
+						</van-row>
+					</div>
+					<van-row>
+						<van-col span="3">2</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">3</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">4</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">5</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">6</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">7</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">8</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">9</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">10</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+					<van-row>
+						<van-col span="3">11</van-col>
+						<van-col span="3">专业英语@临1234</van-col>
+						<van-col span="3">计算机体系结构@临1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3">毛泽东思想@临港1234</van-col>
+						<van-col span="3"></van-col>
+						<van-col span="3"></van-col>
+					</van-row>
+				</van-tab>
+				<van-tab title="课程信息">内容 2</van-tab>
+			</van-tabs>
 		</div>
 		<script type="text/javascript" src="js/footer.js"></script>
 	</div>
@@ -19,6 +136,7 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
+			tabactive: 0,
 			footeractive: 1,
 			searchform: '',
 		},
