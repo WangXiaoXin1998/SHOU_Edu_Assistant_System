@@ -121,7 +121,7 @@
 						this.QA[this.updateForm.index].answer = this.updateForm.answer
 					})
 					.catch(error => {
-						if (error.hasOwnProperty('response.status')) {
+						if (error.response.hasOwnProperty('status')) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('修改失败：token权限异常');

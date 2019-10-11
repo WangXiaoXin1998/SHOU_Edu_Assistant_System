@@ -141,7 +141,7 @@
 						this.loading = false;
 					})
 					.catch(error => {
-						if (error.hasOwnProperty('response.status')) {
+						if (error.response.hasOwnProperty('status')) {
 							switch (error.response.status) {
 								case 401:
 									this.$notify('获取失败：token权限异常');

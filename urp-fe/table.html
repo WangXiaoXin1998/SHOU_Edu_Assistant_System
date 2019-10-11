@@ -10,122 +10,32 @@
 	<div id="control" v-cloak>
 		<van-nav-bar title="我的课表" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
 		<div class="container">
+			<van-dropdown-menu class="select">
+				<van-dropdown-item :title="termList[nowTerm]" v-model="nowTerm" :options="termList"
+					@change="changeTerm" />
+			</van-dropdown-menu>
 			<van-tabs v-model="tabactive" swipeable color="#1f8cfa">
-				<van-tab title="课程表">
-					<div style="height:12px;">
-						<van-row>
-							<van-col span="3">1</van-col>
-							<van-col span="3">专业英语@临1234</van-col>
-							<van-col span="3">计算机体系结构@临1234</van-col>
-							<van-col span="3">毛泽东思想@临港1234</van-col>
-							<van-col span="3">毛泽东思想@临港1234</van-col>
-							<van-col span="3">毛泽东思想@临港1234</van-col>
-							<van-col span="3"></van-col>
-							<van-col span="3"></van-col>
-						</van-row>
-					</div>
-					<van-row>
-						<van-col span="3">2</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">3</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">4</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">5</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">6</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">7</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">8</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">9</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">10</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
-					<van-row>
-						<van-col span="3">11</van-col>
-						<van-col span="3">专业英语@临1234</van-col>
-						<van-col span="3">计算机体系结构@临1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3">毛泽东思想@临港1234</van-col>
-						<van-col span="3"></van-col>
-						<van-col span="3"></van-col>
-					</van-row>
+				<!-- <van-tab title="课程表">
+					<center>我一定做</center>
+				</van-tab> -->
+				<van-tab title="课程信息">
+					<van-collapse v-model="activeNames">
+						<van-collapse-item v-for="(course,index) in tableData[nowTerm].class" :title="course.cname"
+							:name="index">
+							课程编号：{{course.cid}}_{{course.cord}}<br />
+							上课教师：{{course.teacher}}<br />
+							学　　分：{{course.credit}}<br />
+							课程属性：{{course.cattr}}<br />
+							课程类别：{{course.ccate}}<br />
+							考试方式：{{course.cexamtype}}<br />
+							学　　时：{{course.classhour}}<br />
+							课程安排：<br />
+							<div v-for="(time,index) in course.classTime">
+								{{time}}节 {{course.classPlace[index]}}<br/>（{{course.classWeek[index]}}周）<br/>
+					        </div>
+						</van-collapse-item>
+					</van-collapse>
 				</van-tab>
-				<van-tab title="课程信息">内容 2</van-tab>
 			</van-tabs>
 		</div>
 		<script type="text/javascript" src="js/footer.js"></script>
@@ -136,19 +46,108 @@
 	var vm = new Vue({
 		el: '#control',
 		data: {
+			activeNames: [],
 			tabactive: 0,
 			footeractive: 1,
 			searchform: '',
+			nowTerm: 0,
+			termNum: 0,
+			tableData: [],
+			termList: [],
 		},
 		methods: {
+			getTable() {
+				axios.get(baseurl + '/schedule/' + User.userid,
+					{ headers: { 'Content-Type': 'application/json', 'token': token } })
+					.then(res => {
+						(res.data).sort(this.compareUp('term', res.data))
+						this.tableData = res.data
+						index = 0
+						for (item of res.data) {
+							this.termList[index] = { text: item.term, value: index }
+							index = index + 1
+						}
+						this.termNum = index
+						this.nowTerm = index - 1
+						this.termNum = res.data.length
+						for (i of this.tableData[this.nowTerm].class) {
+							i.classTime = []
+							i.classPlace = []
+							i.classWeek = []
+							temp = i.classtime.split("#")
+							num = 0
+							while (num < temp.length - 1) {
+								time = temp[num].split("-")
+								switch (parseInt(time[0] / 12)) {
+									case 0:
+										i.classTime.push("周一" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 1:
+										i.classTime.push("周二" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 2:
+										i.classTime.push("周三" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 3:
+										i.classTime.push("周四" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 4:
+										i.classTime.push("周五" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 5:
+										i.classTime.push("周六" + time[0] % 12 + "-" + time[1] % 12)
+										break
+									case 6:
+										i.classTime.push("周日" + time[0] % 12 + "-" + time[1] % 12)
+										break
+								}
+								i.classPlace.push(temp[num + 1]) //上课地点
+								i.classWeek.push(temp[num + 2].replace(/\|/g, "、"))//上课周次
+								num = num + 3
+							}
+						}
+					})
+					.catch(error => {
+						console.log(res)
+					})
+			},
+			changeTerm() {
+				this.activeNames = []
+			},
+			compareUp(propertyName, data) { // 升序排序
+				if ((typeof data[0][propertyName]) != "number") { // 属性值为非数字
+					return function (object1, object2) {
+						var value1 = object1[propertyName];
+						var value2 = object2[propertyName];
+						if (value1.indexOf("秋季学期") != -1) {
+							value1 = value1.replace('秋季学期', '啊秋季学期');
+						}
+						if (value2.indexOf("秋季学期") != -1) {
+							value2 = value2.replace('秋季学期', '啊秋季学期');
+						}
+						return value1.localeCompare(value2);
+					}
+				}
+				else {
+					return function (object1, object2) { // 属性值为数字
+						var value1 = object1[propertyName];
+						var value2 = object2[propertyName];
+						return value1 - value2;
+					}
+				}
+			}
 		},
 		mounted() {
 			checkToken()
+			this.getTable()
 		},
 	});
 </script>
 
 <style>
+	.select {
+		z-index: 100;
+	}
 </style>
 
 

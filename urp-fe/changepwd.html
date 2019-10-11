@@ -74,7 +74,7 @@
 							this.loading = false;
 						})
 						.catch(error => {
-							if (error.hasOwnProperty('response.status')) {
+							if (error.response.hasOwnProperty('status')) {
 								switch (error.response.status) {
 									case 400:
 										this.$notify('修改失败：参数格式错误');

@@ -1,0 +1,145 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>通讯录</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control" v-cloak>
+		<van-nav-bar title="通讯录" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-search v-model="searchform" placeholder="请输入搜索关键词" show-action shape="round" @search="search">
+				<div slot="action" @click="search">搜索</div>
+			</van-search>
+			<van-panel v-for="contact in result" :title=contact.name :desc=contact.department>
+				<div class="infor">
+					<van-row>
+						<van-col span="18">邮箱：{{contact.mail}}</van-col>
+						<van-col span="5">
+							<van-button v-if="contact.mail" plain round type="info" size="mini"
+								v-clipboard:copy="contact.mail" v-clipboard:success="onCopy"
+								v-clipboard:error="onError">复制</van-button>
+						</van-col>
+					</van-row>
+					<van-row>
+						<van-col span="18">电话：{{contact.tele}}</van-col>
+						<van-col span="5">
+							<van-button v-if="contact.tele" plain round type="info" size="mini"
+								@click='tel(contact.tele)'>拨打</van-button>
+						</van-col>
+					</van-row>
+					<van-row>
+						<van-col span="18">手机：{{contact.phone}}</van-col>
+						<van-col span="5">
+							<van-button v-if="contact.phone" plain round type="info" size="mini"
+								@click='tel(contact.phone)'>拨打</van-button>
+						</van-col>
+					</van-row>
+				</div>
+			</van-panel>
+		</div>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			searchform: '',
+			Contacts: [],
+			result: [],
+		},
+		methods: {
+			tel(telephone) {
+				window.location.href = 'tel:' + telephone
+			},
+			search() {
+				if (!this.searchform) {
+					this.$notify({
+						message: '搜索失败：搜索条件不能为空',
+						background: '#F4A460'
+					});
+					return
+				}
+				this.result = []
+				for (i of this.Contacts) {
+					if (i.name.includes(this.searchform) || (i.phone && i.phone.includes(this.searchform)) || (i.mail && i.mail.includes(this.searchform)) || (i.tele && i.tele.includes(this.searchform))) {
+						this.result.push(i)
+					}
+				}
+				if (this.result.length == 0) {
+					console.log(this.result.length)
+					this.$notify({
+						message: '搜索失败：暂无匹配数据',
+						background: '#F4A460'
+					});
+				}
+			},
+			onCopy() {
+				this.$notify({
+					message: '复制成功',
+					background: '#1989fa'
+				});
+			},
+			// 复制失败
+			onError(e) {
+				this.$notify('复制失败');
+			},
+			getContacts() {
+				axios.get(baseurl + '/contacts',
+					{ headers: { 'Content-Type': 'application/json', 'token': token } })
+					.then(res => {
+						this.Contacts = res.data
+						//this.result = res.data
+						this.loading = false;
+					})
+					.catch(error => {
+						if (error.response.hasOwnProperty('status')) {
+							switch (error.response.status) {
+								case 401:
+									this.$notify('获取失败：token权限异常');
+									logout();
+									break;
+								case 500:
+									this.$notify('获取失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('获取失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('获取失败：服务器通信异常');
+						}
+						this.loading = false;
+					})
+			}
+		},
+		mounted() {
+			checkToken()
+			this.getContacts()
+		},
+	});
+</script>
+
+<style>
+	.tel {
+		font-size: 14px;
+		line-height: 20px;
+	}
+
+	.copy {
+		float: right;
+		margin-top: -5px;
+		margin-left: 2px;
+	}
+
+	.infor {
+		margin-left: 15px;
+		font-size: 12px;
+		line-height: 28px;
+	}
+</style>
+
+
+</html>
