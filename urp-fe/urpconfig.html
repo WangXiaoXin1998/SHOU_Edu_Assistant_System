@@ -1,0 +1,112 @@
+﻿<meta name="viewport" charset=utf-8″ content="width=device-width, initial-scale=1, user-scalable=no" />
+<html>
+
+<head>
+	<title>系统配置</title>
+</head>
+<script type="text/javascript" src="js/js_lead-in.js"></script>
+
+<body>
+	<div id="control" v-cloak>
+		<van-nav-bar title="系统配置" left-text="返回" border="true" left-arrow fixed @click-left="goBack()"></van-nav-bar>
+		<div class="container">
+			<van-field readonly clickable label="开学日期" :value="currentDateShow" placeholder="请选择日期"
+				@click="showDatePicker = true" />
+		</div>
+		<van-popup v-model="showDatePicker" position="bottom">
+			<van-datetime-picker v-model="currentDate" type="date" @confirm="confirmDate" />
+		</van-popup>
+	</div>
+</body>
+
+<script>
+	var vm = new Vue({
+		el: '#control',
+		data: {
+			active: 1,
+			loading: true,
+			showDatePicker: false,
+			currentDate: '',
+			currentDateShow: '',
+		},
+		methods: {
+			confirmDate() {
+				this.showDatePicker = false
+				termDate = 1900 + this.currentDate.getYear() + '-'
+				if (this.currentDate.getMonth() < 9)
+					termDate = termDate + '0'
+				termDate = termDate + (this.currentDate.getMonth()+1) + '-'
+				if (this.currentDate.getDate() < 10)
+					termDate = termDate + '0'
+				termDate = termDate + this.currentDate.getDate()
+				this.currentDateShow = termDate
+				updateform = { "termDate": termDate };
+				axios.put(baseurl + '/urpconfig', updateform,
+					{ headers: { 'Content-Type': 'application/json', 'token': token } })
+					.then(res => {
+						this.$notify({
+							message: '修改成功',
+							background: '#1989fa'
+						});
+					})
+					.catch(error => {
+						if (error.response.hasOwnProperty('status')) {
+							switch (error.response.status) {
+								case 401:
+									this.$notify('修改失败：token权限异常');
+									logout();
+									break;
+								case 500:
+									this.$notify('修改失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('修改失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('修改失败：服务器通信异常');
+						}
+						this.loading = false;
+					})
+			},
+			getConfig() {
+				axios.get(baseurl + '/urpconfig',
+					{ headers: { 'Content-Type': 'application/json', 'token': token } })
+					.then(res => {
+						this.currentDateShow = res.data.termDate
+						dd = res.data.termDate.split('-')
+						this.currentDate = new Date(dd[0], dd[1]-1, dd[2])
+					})
+					.catch(error => {
+						if (error.response.hasOwnProperty('status')) {
+							switch (error.response.status) {
+								case 401:
+									this.$notify('获取失败：token权限异常');
+									logout();
+									break;
+								case 500:
+									this.$notify('获取失败：服务器内部错误');
+									break;
+								default:
+									this.$notify('获取失败：服务器未知异常');
+							}
+						} else {
+							this.$notify('获取失败：服务器通信异常');
+						}
+						this.loading = false;
+					})
+			},
+		},
+		watch: {
+		},
+		mounted() {
+			checkToken()
+			this.getConfig()
+		},
+	});
+</script>
+
+<style>
+</style>
+
+
+</html>

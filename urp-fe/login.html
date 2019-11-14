@@ -26,7 +26,7 @@
 					<van-field v-model="loginform.password" :disabled="formable.password" center clearable label="密码"
 						type="password" placeholder="请输入密码" size="large" />
 				</van-cell-group>
-				<van-cell-group>
+				<!-- <van-cell-group>
 					<van-row>
 						<van-col span="16">
 							<van-field v-model="loginform.idecode" :disabled="formable.idecode" center clearable
@@ -36,13 +36,15 @@
 							<img src="images/frame/code.jpg" height="48px" class="idecode">
 						</van-col>
 					</van-row>
-				</van-cell-group>
+				</van-cell-group> -->
 				<br>
 				<van-row>
 					<van-col span="12">
 						<van-checkbox v-model="loginform.loginauto">自动登录</van-checkbox>
 					</van-col>
-					<van-col span="12" class="forgetpwd">忘记密码？</van-col>
+					<!-- <van-col span="12" class="forgetpwd">
+						忘记密码？
+					</van-col> -->
 				</van-row>
 				<br>
 				<van-button round type="info" size="large" class="loginbutton" @click="login"
@@ -89,12 +91,17 @@
 			}
 		},
 		methods: {
+			forgetpwd() {
+				Dialog.alert({
+					message: '请联系校教务处重置密码'
+				})
+			},
 			changestate(state) {
 				this.loginbutton.loading = state
 				this.loginbutton.disabled = state
 				this.formable.username = state
 				this.formable.password = state
-				this.formable.idecode = state
+				//this.formable.idecode = state
 			},
 			login() {
 				this.changestate(true)
@@ -137,18 +144,20 @@
 								default:
 									this.$notify('登录失败：服务器未知异常');
 							}
+							this.changestate(false)
 							return
 						} else {
 							this.$notify('登录失败：服务器通信异常');
+							this.changestate(false)
 						}
-						this.changestate(false)
 					})
 			},
 		},
 		watch: {
 			loginform: {
 				handler(newVal, oldVal) {
-					this.loginbutton.disabled = !(newVal.username && newVal.password && newVal.idecode)
+					// this.loginbutton.disabled = !(newVal.username && newVal.password && newVal.idecode)
+					this.loginbutton.disabled = !(newVal.username && newVal.password)
 				},
 				deep: true
 			}
